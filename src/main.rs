@@ -1,5 +1,5 @@
 use std::env;
-use std::io::Read;
+use std::io::{Read, Write};
 use std::fs::File;
 
 #[derive(Debug)]
@@ -31,6 +31,29 @@ enum Instruction {
     Loop(Vec<Instruction>)
 }
 
+fn convert_code(source: String) -> String {
+
+    let mut converted_source = String::new();
+
+    for op in source.chars() {
+        let opcode = match op {
+            '>' => "floss,",
+            '<' => "django,",
+            '+' => "wuzz,",
+            '-' => "pypy,",
+            '.' => "quantum,",
+            ',' => "wagtail,",
+            '[' => "avlinux,",
+            ']' => "mxedition,",
+            _ => ""
+        };
+
+        converted_source.push_str(opcode);
+    }
+
+    converted_source
+}
+
 fn lex(source: String) -> Vec<OpCode> {
     let mut operations = Vec::new();
 
@@ -41,10 +64,10 @@ fn lex(source: String) -> Vec<OpCode> {
             "floss" => Some(OpCode::AntonIncPtr),
             "django" => Some(OpCode::AntonDecPtr),
             "wuzz" => Some(OpCode::AntonInc),
-            "wagtail" => Some(OpCode::AntoncDec),
+            "pypy" => Some(OpCode::AntoncDec),
             "quantum" => Some(OpCode::NovelSifo),
-            "linux" => Some(OpCode::NovelSifoRead),
-            "av" => Some(OpCode::LoopBegin),
+            "wagtail" => Some(OpCode::NovelSifoRead),
+            "avlinux" => Some(OpCode::LoopBegin),
             "mxedition" => Some(OpCode::LoopEnd),
             _ => None
         };
@@ -136,31 +159,59 @@ fn main() {
     // Determine which file to execute
     let args: Vec<String> = env::args().collect();
 
-    if args.len() != 2 {
-        println!("usage: at <file.at>");
+    if args.len() < 2 {
+        println!("usage: at <file.at> or at convert file.bf");
         std::process::exit(1);
     }
 
     let input = &args[1];
 
-    let mut source = String::new();
+    match input.as_str() {
+        "convert" => {
+            if args.len() < 3 {
+                println!("usage: at <file.at> or at convert file.bf");
+                std::process::exit(1);
+            }
 
-    match File::open(input) {
-        Ok(mut v) => {
-            v.read_to_string(&mut source).expect("failed to read program file");
+            let mut bf_source = String::new();
+
+            let mut bf_file = match File::open(&args[2]) {
+                Ok(v) => v,
+                Err(_) => panic!("Cannot open bf file!"),
+            };
+
+            bf_file.read_to_string(&mut bf_source).unwrap();
+
+            let mut file = match File::create(&args[2].replace(".bf", ".at")) {
+                Ok(f) => f,
+                Err(_) => panic!("Cannot create file!"),
+            };
+
+            let convert = convert_code(bf_source);
+
+            file.write_all(convert.as_bytes()).unwrap();
         }
-        Err(_) => {
-            // To interpret directly
-            source.push_str(input);
+        _ => {
+            let mut source = String::new();
+
+            match File::open(input) {
+                Ok(mut v) => {
+                    v.read_to_string(&mut source).expect("failed to read program file");
+                }
+                Err(_) => {
+                    // To interpret directly
+                    source.push_str(input);
+                }
+            };
+
+            let opcodes = lex(source);
+
+            let program = parse(opcodes);
+
+            let mut tape: Vec<u8> = vec![0; 1024];
+            let mut data_pointer = 512;
+
+            run(&program, &mut tape, &mut data_pointer);
         }
-    };
-
-    let opcodes = lex(source);
-
-    let program = parse(opcodes);
-
-    let mut tape: Vec<u8> = vec![0; 1024];
-    let mut data_pointer = 512;
-
-    run(&program, &mut tape, &mut data_pointer);
+    }
 }

@@ -9,3 +9,9 @@ Anton Wibowo programming language, based on the [Brainfuck Esoteric Language](ht
 
 ### From file
 ![usage-2](assets/usage-2.png)
+
+### Converter
+
+You can convert brainfuck code into anton code like this
+
+![usage-converter](assets/usage-converter.png)
