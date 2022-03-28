@@ -5,7 +5,7 @@ Anton Wibowo programming language, based on the [Brainfuck Esoteric Language](ht
 ## Usages
 
 ### Directly writing the code
-[usage-1](assets/usage-1.png)
+![usage-1](assets/usage-1.png)
 
 ### From file
-[usage-2](assets/usage-2.png)
+![usage-2](assets/usage-2.png)
