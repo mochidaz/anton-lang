@@ -37,14 +37,14 @@ fn convert_code(source: String) -> String {
 
     for op in source.chars() {
         let opcode = match op {
-            '>' => "floss,",
-            '<' => "django,",
-            '+' => "wuzz,",
-            '-' => "pypy,",
-            '.' => "quantum,",
-            ',' => "wagtail,",
-            '[' => "avlinux,",
-            ']' => "mxedition,",
+            '>' => "floss:)",
+            '<' => "django:)",
+            '+' => "wuzz:)",
+            '-' => "pypy:)",
+            '.' => "quantum:)",
+            ',' => "wagtail:)",
+            '[' => "avlinux:)",
+            ']' => "mxedition:)",
             _ => ""
         };
 
@@ -57,7 +57,7 @@ fn convert_code(source: String) -> String {
 fn lex(source: String) -> Vec<OpCode> {
     let mut operations = Vec::new();
 
-    let splitted_code = source.split(',').collect::<Vec<&str>>();
+    let splitted_code = source.split(":)").collect::<Vec<&str>>();
 
     for symbol in splitted_code {
         let op = match symbol {
