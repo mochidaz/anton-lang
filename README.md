@@ -1,6 +1,14 @@
 # Anton-lang
 
-Anton Wibowo programming language, based on the [Brainfuck Esoteric Language](https://en.wikipedia.org/wiki/Brainfuck). This is a fork of [Bf](https://github.com/Overv/bf).
+Anton Wibowo Esoteric Language
+
+This is a tribute to (or a joke of) Anton Wibowo, a person on Facebook, who is well-known for his act of promoting FLOSS softwares, especially Linux and urges people to stop using proprietary softwares. Every opcodes in this language are taken from phrases he oftenly uses in his posts.
+
+This language is a [Trivial Brainfuck Substitution](https://esolangs.org/wiki/Trivial_brainfuck_substitution) with the following substitutions:
+
+```
+TrivialBrainfuckSubstitution("floss", "django", "wuzz", "pypy", "quantum", "wagtail", "avlinux", "mxedition")
+```
 
 ## Usages
 
